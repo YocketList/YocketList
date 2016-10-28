@@ -1,16 +1,20 @@
-const React = require('react');
-const react_dom = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Router, Route, hashHistory } from 'react-router';
+import Layout from './layout';
+import PlayerApp from './playerapp';
+import QueueApp from './queueapp';
 
 
-class App extends React.Component{
-  render(){
-    return (
-      <div>Hello, World!</div>
-    );
-  }
-};
-
-react_dom.render(<App/>, document.getElementById('App'));
+ReactDOM.render(
+  <Router history={hashHistory}>
+    <Route path="/" component={Layout}>
+      {/* make them children of `App` */}
+      <Route path="player" component={PlayerApp}/>
+      <Route path="queue" component={QueueApp}/>
+    </Route>
+  </Router>,
+  document.getElementById('App'))
 
 
 
