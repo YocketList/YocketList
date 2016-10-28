@@ -11,6 +11,7 @@ module.exports = {
   // when provided with array it will go through all the files
   entry: {
     index: './client/index.jsx',
+    client: './client/client.jsx',
     player: './client/player.jsx',
   },
   // specifies where webpack will dump the compiled files
@@ -34,13 +35,19 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'client/index.html'),
       appMountId: 'App',
-      title: 'Client',
+      title: 'Index',
     }),
     new HtmlWebpackPlugin({
       filename: 'player.html',
       template: path.join(__dirname + '/client/player.html'),
       appMountId: 'Player',
       title: 'Player'
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'client.html',
+      template: path.join(__dirname + '/client/client.html'),
+      appMountId: 'Client',
+      title: 'Client'
     })
   ]
 };
