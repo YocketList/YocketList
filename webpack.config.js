@@ -10,7 +10,7 @@ module.exports = {
   // specifies the entry files
   // when provided with array it will go through all the files
   entry: {
-    index: './client/index.jsx',
+    index: './client/index.jsx'
   },
   // specifies where webpack will dump the compiled files
   output: { 
