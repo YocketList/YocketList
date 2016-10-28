@@ -6,7 +6,16 @@
   </head>
   <body>
     <div id="Client"></div>
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script>
+    var socket = io('http://localhost:3000');
+    socket.on('hello', (data) => {
+      console.log(data);
+    })
+    socket.on('newqeue', (data) => {
+      console.log(data)
+    })
+    </script>
   </body>
 </html>
-
-
