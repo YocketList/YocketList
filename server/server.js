@@ -10,7 +10,6 @@ app.get('/', (req, res) => {
 });
 
 app.post('/qeue', (req, res) => {
-  
   console.log(req.body);
   io.emit('newqeue', req.body);
   res.end();
@@ -18,7 +17,7 @@ app.post('/qeue', (req, res) => {
 app.get('/qeue', (req, res) => {
   // fetch data from db
   io.emit('newqeue', {message: 'made a get request to /qeue'});
-  res.end();
+  res.send(['1','2']);
 })
 
 io.on('connect', (socket) => {
