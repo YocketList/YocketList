@@ -8,7 +8,7 @@ const qArray = ['https://www.youtube.com/watch?v=H8H5tNVE_sY', 'https://www.yout
 
 /* Express Middleware */
 app.use(bodyparser.json());
-
+// CORS headers
 app.use((req,res,next) =>{
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -16,7 +16,7 @@ app.use((req,res,next) =>{
   next();
 });
 
-
+// Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
   res.status(200).send("Yocket List! Where Yockets meets Lists. Yocket List!");
 });
@@ -25,10 +25,12 @@ app.get('/', (req, res) => {
 // req.body { link: '<new Youtube link>'}
 app.get('/queue', (req, res) => {
   console.log(`/queue :: [GET] sending data ${qArray}`);
-  // io.emit();
   res.status(200).send(qArray);
 });
 
+// There are two body properties that should exist non exclusively.
+// If there is a method property set to 'delete' do DELETE behavior
+// If there is a link property set to a youtube url, save to the db
 app.post('/queue', (req, res) => {
   console.log(`/queue :: [POST] got data ${req.body.link}`);
   console.log(req.body);
@@ -53,7 +55,6 @@ app.post('/queue', (req, res) => {
   qArray.push(req.body.link);
   io.emit('newdata', qArray.length);
   res.status(200).send("git it");
-  console.log('qArray', qArray);
   res.end();
 });
 
@@ -65,3 +66,10 @@ io.on('connect', (socket) => {
 http.listen(3000, () => {
   console.log("Server started on port 3000");
 });
+
+/** Socket Event Spec
+ * This is a list of socket events and their triggers
+ * Emit ['newdata']: notifies subscribers to query for new data
+ *  - when any user saves an item to the database
+ *  - when a player window deletes an item from the database
+ */
