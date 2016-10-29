@@ -12,20 +12,20 @@ Run `npm test` to run the test suite
 
 # Project Srtucture
 ======
-YocketList\s\s
-↳ Client\s\s
-  ↳ html files\s\s
-  ↳ entry react file [index.jsx]\s\s
-  ↳ react component dependancies \s\s
-↳ dist \s\s
-  ↳ build directory created by webpack\s\s
-↳ server\s\s
-  ↳ server files\s\s
-configuration files\s\s
-.babelrc\s\s
-.gitignore\s\s
-package.json\s\s
-README.md\s\s
-webpack-hmr.js  [ not properly configured ]\s\s
-webpack.config.js\s\s
+YocketList  
+↳ Client  
+  ↳ html files  
+  ↳ entry react file [index.jsx]  
+  ↳ react component dependancies   
+↳ dist  
+  ↳ build directory created by webpack  
+↳ server  
+  ↳ server files  
+configuration files  
+.babelrc  
+.gitignore  
+package.json  
+README.md  
+webpack-hmr.js  [ not properly configured ]  
+webpack.config.js  
   
