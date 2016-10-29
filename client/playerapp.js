@@ -15,6 +15,7 @@ class PlayerApp extends React.Component {
 
     //initiate socket connection and set up listeners
     this.socket = io.connect('http://localhost:3000');
+    console.log(this.socket.id);
     this.initSocket();
   }
   /**
@@ -61,7 +62,6 @@ class PlayerApp extends React.Component {
       type: "POST",
       url: "http://localhost:3000/queue",
       data: JSON.stringify({method: "delete"}),
-      success: playerEndDone,
       contentType: "application/json; charset=utf-8",
       });
   }

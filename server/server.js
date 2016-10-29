@@ -4,7 +4,7 @@ var io = require('socket.io')(http);
 var bodyparser = require('body-parser');
 
 /* Database */
-const qArray = ['https://www.youtube.com/watch?v=H8H5tNVE_sY', 'https://www.youtube.com/watch?v=CrF3J6ukER8', 'https://www.youtube.com/watch?v=_9vK_F0XnfA'];
+const qArray = [];
 
 /* Express Middleware */
 app.use(bodyparser.json());
@@ -60,7 +60,8 @@ app.post('/queue', (req, res) => {
 
 /* Socket and Server Setup */
 io.on('connect', (socket) => {
-  console.log(`User connected ${socket.id}`)
+  console.log(`User connected ${socket.id}`);
+  socket.emit('connectestablished', socket.id);
 })
 
 http.listen(3000, () => {
@@ -73,3 +74,5 @@ http.listen(3000, () => {
  *  - when any user saves an item to the database
  *  - when a player window deletes an item from the database
  */
+
+module.export = app;
