@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 // import Player from './player';
 import Youtube from 'react-youtube';
 import io from 'socket.io-client';
+import QueueList from './queuelist';
 
 class PlayerApp extends React.Component {
   constructor() {
@@ -16,6 +17,7 @@ class PlayerApp extends React.Component {
   }
   initSocket () {
     this.socket.on('newdata', (data) => {
+      console.log("got new data");
       $.ajax("http://localhost:3000/queue").done((data) => {
         this.setState({urls: data});
       });
@@ -41,13 +43,14 @@ class PlayerApp extends React.Component {
     let newUrls = this.state.urls.slice();
     newUrls.shift();
     this.setState({urls: newUrls});
-    $.ajax({  // TODO pre flight cross origin errors. switch to put with body parameters
-      url: "http://localhost:3000/queue",
-      type: 'DELETE',
-      success: function(result) {
-        this.setState({url: data});
-      }
-    });
+
+    // $.ajax({  // TODO pre flight cross origin errors. switch to put with body parameters
+    //   url: "http://localhost:3000/queue",
+    //   type: 'DELETE',
+    //   success: function(result) {
+    //       this.setState({url: data});
+    //   }
+    // });
   }
 
   render() {
@@ -58,6 +61,7 @@ class PlayerApp extends React.Component {
     return (
     <div className="youtube-wrapper">
       <Youtube videoId={videoUrl} onEnd={this.handlePlayerEnd} onStateChange={this.handleStateChange}/>
+      <QueueList queues={this.state.urls}/>
     </div>
     );
   }
