@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-
 class QueueForm extends React.Component {
   render() {
     return (
       <div>
         <form name='addLink'>
-            <input id='link' type="text" name="link"></input>        
-            <button onClick={this.handleClick.bind(this)} onKeyPress={this._handleChange} type="submit" value="Submit">Submit</button>
+          <input id='link' type="text" name="link"></input>        
+          <button onClick={this.handleClick.bind(this)} onKeyPress={this._handleChange} type="submit" value="Submit">Submit</button>
         </form>
       </div>
     )
@@ -23,12 +22,10 @@ class QueueForm extends React.Component {
   }
 
   handlenter() {
-        if (e.key === 'Enter') {
-            handleClick();
-        }
+    if (e.key === 'Enter') {
+      handleClick();
     }
-
+  }
 }
-
 
 export default QueueForm;

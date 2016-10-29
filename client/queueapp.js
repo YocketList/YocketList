@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Queue from './queue';
 import Form from './queueform';
-
+import QueueList from './queuelist';
 
 class QueueApp extends React.Component {
   constructor() {
@@ -15,19 +15,16 @@ class QueueApp extends React.Component {
   formClick(link) {
     let newQueues = [...this.state.queues];
     newQueues.push(link); 
-    this.setState({ queues: newQueues}); //how do you properly change state
+    this.setState({ queues: newQueues}); 
   }
 
   render() {
-    var queueComponents = this.state.queues.map(function(queue, ind) {
-      return <Queue key={ind} link={queue} />
-    });
     return (
-    <div>
-     <h1>QueueApp</h1>
-     {queueComponents}
-     <Form key={0} formClick={this.formClick.bind(this)} />
-    </div>
+      <div>
+       <h1>QueueApp</h1>
+       <QueueList queues={this.state.queues} />
+       <Form key={0} formClick={this.formClick.bind(this)} />
+      </div>
     )
   }
 }
