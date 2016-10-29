@@ -13,14 +13,14 @@ Run `npm test` to run the test suite
 # Project Srtucture
 ======
 YocketList  
-↳ Client  
-  ↳ html files  
-  ↳ entry react file [index.jsx]  
-  ↳ react component dependancies   
-↳ dist  
-  ↳ build directory created by webpack  
-↳ server  
-  ↳ server files  
+.↳ Client  
+...↳ html files  
+...↳ entry react file [index.jsx]  
+...↳ react component dependancies   
+.↳ dist  
+...↳ build directory created by webpack  
+.↳ server  
+...↳ server files  
 configuration files  
 .babelrc  
 .gitignore  
