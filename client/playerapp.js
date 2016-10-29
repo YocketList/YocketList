@@ -43,6 +43,7 @@ class PlayerApp extends React.Component {
     let newUrls = this.state.urls.slice();
     newUrls.shift();
     this.setState({urls: newUrls});
+
     // $.ajax({  // TODO pre flight cross origin errors. switch to put with body parameters
     //   url: "http://localhost:3000/queue",
     //   type: 'DELETE',

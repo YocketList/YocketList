@@ -8,14 +8,30 @@ class QueueApp extends React.Component {
   constructor() {
     super();
     this.state = {
-      queues: ['queue1', 'queue2', 'queue3', 'queue4', 'queue5' ]
+      queues: []
     }
   } 
+
+  componentDidMount() {
+    $.get("http://localhost:3000/queue").done((data) => {
+      console.log('data', data);
+      this.setState({queues: data});
+    });
+  }
 
   formClick(link) {
     let newQueues = [...this.state.queues];
     newQueues.push(link); 
-    this.setState({ queues: newQueues}); 
+    this.setState({ queues: newQueues});
+    $.ajax({
+      url: "http://localhost:3000/queue",
+      type:"POST",
+      data: JSON.stringify({link: link}),
+      contentType:"application/json; charset=utf-8",
+      dataType:"json",
+      success: function(response){
+        console.log(response);
+    }});
   }
 
   render() {
