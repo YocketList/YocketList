@@ -22,7 +22,16 @@ class QueueApp extends React.Component {
   formClick(link) {
     let newQueues = [...this.state.queues];
     newQueues.push(link); 
-    this.setState({ queues: newQueues}); 
+    this.setState({ queues: newQueues});
+    $.ajax({
+      url: "http://localhost:3000/queue",
+      type:"POST",
+      data: JSON.stringify({link: link}),
+      contentType:"application/json; charset=utf-8",
+      dataType:"json",
+      success: function(response){
+        console.log(response);
+    }});
   }
 
   render() {

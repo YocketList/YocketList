@@ -37,7 +37,8 @@ app.post('/queue', (req, res) => {
   }
   qArray.push(req.body.link);
   io.emit('newdata', qArray.length);
-  res.status(200).send("");
+  res.status(200).send("git it");
+  console.log('qArray', qArray);
   res.end();
 });
 
