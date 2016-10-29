@@ -29,22 +29,29 @@ app.get('/queue', (req, res) => {
 
 app.post('/queue', (req, res) => {
   console.log(`/queue :: [POST] got data ${req.body.link}`);
+  console.log(req.body);
+  if(req.body.method){
+    if(req.body.method === 'delete'){
+      // doing app.delete resulted in interesting CORS issues 
+      // with preflight requirements. Even with the cors Headers
+      // above. We are hackily using req.body.method to simulate RESTful
+      // behavior. 
+      console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
+      qArray.shift();
+      console.log(`/queue :: [DELETE] result of delete ${qArray}`);
+      io.emit('newdata', qArray.length);
+      res.status(200).send("");
+      return;
+    }
+  }
   if(!req.body.link){
-    res.status(404).send("no data supplied");
+    res.status(400).send("no data supplied");
     return;
   }
   qArray.push(req.body.link);
   io.emit('newdata', qArray.length);
   res.status(200).send("");
   res.end();
-});
-
-app.delete('/queue', (req, res) => {
-  console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
-  qArray.shift();
-  console.log(`/queue :: [DELETE] result of delete ${qArray}`);
-  io.emit('newdata', qArray.length);
-  res.status(200).send("");
 });
 
 /* Socket and Server Setup */

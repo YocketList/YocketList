@@ -40,16 +40,13 @@ class PlayerApp extends React.Component {
     // Make request to server to notify all clients that the video ended
     //  so they can remove the video from the queue 
     //  another get request or just remove top item
-    let newUrls = this.state.urls.slice();
-    newUrls.shift();
-    this.setState({urls: newUrls});
-    // $.ajax({  // TODO pre flight cross origin errors. switch to put with body parameters
-    //   url: "http://localhost:3000/queue",
-    //   type: 'DELETE',
-    //   success: function(result) {
-    //       this.setState({url: data});
-    //   }
-    // });
+    $.ajax({
+      type: "POST",
+      url: "http://localhost:3000/queue",
+      data: JSON.stringify({method: "delete"}),
+      success: playerEndDone,
+      contentType: "application/json; charset=utf-8",
+      });
   }
 
   render() {

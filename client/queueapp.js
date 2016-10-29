@@ -21,9 +21,9 @@ class QueueApp extends React.Component {
   render() {
     return (
       <div>
-       <h1>QueueApp</h1>
-       <QueueList queues={this.state.queues} />
-       <Form key={0} formClick={this.formClick.bind(this)} />
+        <h1>QueueApp</h1>
+        <QueueList queues={this.state.queues} />
+        <Form key={0} formClick={this.formClick.bind(this)} />
       </div>
     )
   }
