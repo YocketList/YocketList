@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import Queue from './queue';
 import Form from './queueform';
 import QueueList from './queuelist';
+import io from 'socket.io-client';
+
 
 class QueueApp extends React.Component {
   constructor() {
@@ -10,17 +12,31 @@ class QueueApp extends React.Component {
     this.state = {
       queues: []
     }
+
+    this.socket = io.connect('http://localhost:3000');
+    this.initializeListeners();
   } 
   /**
    * We GET our initial set of data here after the first render
    * has been made.
    */
-  componentDidMount() {
+
+  getData() {
     $.get("http://localhost:3000/queue").done((data) => {
-      console.log('data', data);
-      this.setState({queues: data});
+        this.setState({queues: data});
+      });
+  }
+
+  initializeListeners() {
+    this.socket.on('newdata', () => {
+      this.getData();
     });
   }
+  
+  componentDidMount() {
+    this.getData();
+  }
+
   /**
    * This is the callback for the form component to use in onClick.
    * It makes an ajax request to add a new link when the submit button is clicked.
