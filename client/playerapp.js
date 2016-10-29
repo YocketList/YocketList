@@ -32,7 +32,7 @@ class PlayerApp extends React.Component {
     });
   }
   /**
-   * We grab our initial set of data here after the first render
+   * We GET our initial set of data here after the first render
    * has been made.
    */
   componentDidMount(){
