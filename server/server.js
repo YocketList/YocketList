@@ -8,12 +8,14 @@ const qArray = ['https://www.youtube.com/watch?v=H8H5tNVE_sY', 'https://www.yout
 
 /* Express Middleware */
 app.use(bodyparser.json());
+
 app.use((req,res,next) =>{
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
   next();
 });
+
 
 app.get('/', (req, res) => {
   res.status(200).send("Yocket List! Where Yockets meets Lists. Yocket List!");
@@ -50,7 +52,8 @@ app.post('/queue', (req, res) => {
   }
   qArray.push(req.body.link);
   io.emit('newdata', qArray.length);
-  res.status(200).send("");
+  res.status(200).send("git it");
+  console.log('qArray', qArray);
   res.end();
 });
 
