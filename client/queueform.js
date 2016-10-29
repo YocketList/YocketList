@@ -13,6 +13,11 @@ class QueueForm extends React.Component {
     )
   }
 
+  /**
+   * event handler the form submission. This will use the formClick callback
+   * to make the ajax request and clear the form.
+   * preventDefault is used to prevent a page refresh.
+   */
   handleClick(e) {
     e.preventDefault();
     const form = document.forms.addLink;
@@ -21,9 +26,13 @@ class QueueForm extends React.Component {
     form.link.value = '';
   }
 
-  handlenter() {
+  /**
+   * event handler for form sumission. It intercepts key presses to enter to allow
+   * the user to submit using the enter button.
+   */
+  handlenter(e) {
     if (e.key === 'Enter') {
-      handleClick();
+      handleClick(e);
     }
   }
 }
