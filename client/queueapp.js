@@ -8,9 +8,16 @@ class QueueApp extends React.Component {
   constructor() {
     super();
     this.state = {
-      queues: ['queue1', 'queue2', 'queue3', 'queue4', 'queue5' ]
+      queues: []
     }
   } 
+
+  componentDidMount() {
+    $.get("http://localhost:3000/queue").done((data) => {
+      console.log('data', data);
+      this.setState({queues: data});
+    });
+  }
 
   formClick(link) {
     let newQueues = [...this.state.queues];

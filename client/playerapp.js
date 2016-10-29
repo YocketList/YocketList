@@ -45,7 +45,7 @@ class PlayerApp extends React.Component {
       url: "http://localhost:3000/queue",
       type: 'DELETE',
       success: function(result) {
-          this.setState({url: data});
+        this.setState({url: data});
       }
     });
   }
