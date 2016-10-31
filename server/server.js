@@ -6,6 +6,7 @@ var bodyparser = require('body-parser');
 /* Database */
 const qArray = [];
 
+
 /* Express Middleware */
 app.use(bodyparser.json());
 // CORS headers
@@ -53,6 +54,7 @@ app.post('/queue', (req, res) => {
     return;
   }
   qArray.push(req.body.link);
+  console.log(`/queue :: [POST] results in ${qArray}`);
   io.emit('newdata', qArray.length);
   res.status(200).send("git it");
   res.end();
