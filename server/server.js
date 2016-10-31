@@ -1,11 +1,45 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var bodyparser = require('body-parser');
+const app = require('express')();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const bodyparser = require('body-parser');
+const oauth = require('/passport.js');
+
+app.use( passport.initialize());
+app.use( passport.session());
+
+app.get('/auth/google', passport.authenticate('google', { scope: [
+       'https://www.googleapis.com/auth/plus.login',
+       'https://www.googleapis.com/auth/plus.profile.emails.read'] 
+}));
+
+app.get( '/auth/google/callback', 
+    	passport.authenticate( 'google', { 
+    		successRedirect: '/account',
+    		failureRedirect: '/login'
+}));
+
+// Future Login and Logout Logic
+
+// app.get('/login', isLoggedIn, (req, res) => {
+
+// })
+
+// app.get('/logout', function(req, res){
+//   req.logout();
+//   res.redirect('/');
+// });
+
+// function isLoggedIn(req, res, next) {
+
+//     if (req.isAuthenticated()) {
+//         return next();
+//     }
+
+//     res.redirect('/');
+// }
 
 /* Database */
 const qArray = [];
-
 
 /* Express Middleware */
 app.use(bodyparser.json());
