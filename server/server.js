@@ -1,8 +1,11 @@
 const app = require('express')();
+const fs = require('fs');
+const path = require('path');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const bodyparser = require('body-parser');
-const oauth = require('/passport.js');
+const passport = require('passport');
+const oauth = require('./google-passport');
 
 app.use( passport.initialize());
 app.use( passport.session());
@@ -12,16 +15,21 @@ app.get('/auth/google', passport.authenticate('google', { scope: [
        'https://www.googleapis.com/auth/plus.profile.emails.read'] 
 }));
 
-app.get( '/auth/google/callback', 
+app.get( '/auth/google/callback', (
     	passport.authenticate( 'google', { 
     		successRedirect: '/account',
     		failureRedirect: '/login'
-}));
+})));
 
 // Future Login and Logout Logic
 
-// app.get('/login', isLoggedIn, (req, res) => {
+app.get('/login', (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
+});
 
+// app.get('/account', (req, res) => {
+//   res.setCookie({googleId: })
+  
 // })
 
 // app.get('/logout', function(req, res){
