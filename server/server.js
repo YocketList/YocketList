@@ -4,22 +4,49 @@ const path = require('path');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const bodyparser = require('body-parser');
+const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
-const oauth = require('./google-passport');
+// const oauth = require('./google-passport');
+const creds = require('../app.config');
 
 app.use( passport.initialize());
 app.use( passport.session());
 
-app.get('/auth/google', passport.authenticate('google', { scope: [
-       'https://www.googleapis.com/auth/plus.login',
-       'https://www.googleapis.com/auth/plus.profile.emails.read'] 
-}));
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
 
-app.get( '/auth/google/callback', (
+passport.deserializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', (
     	passport.authenticate( 'google', { 
-    		successRedirect: '/account',
+    		successRedirect: '/',
     		failureRedirect: '/login'
 })));
+
+passport.use(new GoogleStrategy({
+    clientID:     creds.GOOGLE_CLIENT_ID,
+    clientSecret: creds.GOOGLE_CLIENT_SECRET,
+    callbackURL: creds.CALLBACK_URL,
+    passReqToCallback   : true
+  },
+  function(request, accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+
+// Currently throwing error on User.findOrCreates
+// Integrate with User model below
+// Add cookie upon login
+
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  })
+  }
+));
 
 // Future Login and Logout Logic
 
