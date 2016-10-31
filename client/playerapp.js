@@ -5,6 +5,8 @@ import Youtube from 'react-youtube';
 import io from 'socket.io-client';
 import QueueList from './queuelist';
 
+const HOST = "http://localhost:3000";
+
 class PlayerApp extends React.Component {
   constructor() {
     super();
@@ -14,7 +16,8 @@ class PlayerApp extends React.Component {
     this.handlePlayerEnd = this.handlePlayerEnd.bind(this);
 
     //initiate socket connection and set up listeners
-    this.socket = io.connect('http://localhost:3000');
+    this.socket = io.connect(HOST);
+    console.log(this.socket.id);
     this.initSocket();
   }
   /**
@@ -26,7 +29,7 @@ class PlayerApp extends React.Component {
   initSocket () {
     this.socket.on('newdata', (data) => {
       console.log("got new data");
-      $.ajax("http://localhost:3000/queue").done((data) => {
+      $.ajax(HOST + "/queue").done((data) => {
         this.setState({urls: data});
       });
     });
@@ -36,7 +39,7 @@ class PlayerApp extends React.Component {
    * has been made.
    */
   componentDidMount(){
-    $.get("http://localhost:3000/queue").done((data) => {
+    $.get(HOST + "/queue").done((data) => {
       this.setState({urls: data});
     });
   }
@@ -46,6 +49,7 @@ class PlayerApp extends React.Component {
    * UNSTARTED: -1, ENDED: 0, PLAYING: 1, PAUSED: 2, BUFFERING: 3, CUED: 5
    */
   handleStateChange(event){
+    console.log(event.data);
     // CUED was a good option for enabling "auto play" because it waits
     // until the player is loaded (-1) and then the video is cued ready to play
     if(event.data === 5){
@@ -59,18 +63,20 @@ class PlayerApp extends React.Component {
   handlePlayerEnd(event){
     $.ajax({
       type: "POST",
-      url: "http://localhost:3000/queue",
+      url: HOST + "/queue",
       data: JSON.stringify({method: "delete"}),
-      success: playerEndDone,
       contentType: "application/json; charset=utf-8",
       });
   }
 
   render() {
+    console.log(this.state.urls);
     // Can we make it so the current video played is not 
     // displayed in the queue?
-    if(this.state.urls.length > 1)
-      var videoUrl = this.state.urls[0].split('=')[1];
+      if(this.state.urls.length > 0){
+        var videoUrl = this.state.urls[0].split('=')[1];
+        console.log(videoUrl);
+    }
     return (
     <div className="youtube-wrapper">
       <Youtube videoId={videoUrl} onEnd={this.handlePlayerEnd} onStateChange={this.handleStateChange}/>

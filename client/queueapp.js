@@ -5,6 +5,7 @@ import Form from './queueform';
 import QueueList from './queuelist';
 import io from 'socket.io-client';
 
+const HOST = "http://localhost:3000";
 
 class QueueApp extends React.Component {
   constructor() {
@@ -13,7 +14,7 @@ class QueueApp extends React.Component {
       queues: []
     }
 
-    this.socket = io.connect('http://localhost:3000');
+    this.socket = io.connect(HOST);
     this.initializeListeners();
   } 
   /**
@@ -22,7 +23,7 @@ class QueueApp extends React.Component {
    */
 
   getData() {
-    $.get("http://localhost:3000/queue").done((data) => {
+    $.get(HOST + "/queue").done((data) => {
         this.setState({queues: data});
       });
   }
@@ -47,7 +48,7 @@ class QueueApp extends React.Component {
     newQueues.push(link); 
     this.setState({ queues: newQueues});
     $.ajax({
-      url: "http://localhost:3000/queue",
+      url: HOST+"/queue",
       type:"POST",
       data: JSON.stringify({link: link}),
       contentType:"application/json; charset=utf-8",
