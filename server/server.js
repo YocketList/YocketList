@@ -1,7 +1,21 @@
-var app = require('express')();
+const app = require('express')();
+const bodyparser = require('body-parser');
+// const jsonParser = bodyParser.json();
+const path = require('path');
+
+
+
+//keep next 4 lines --soo
+const mongoose = require('mongoose');
+const User = require('./model/usermodel');
+const Event = require('./model/eventmodel');
+const Testdata = require('./model/database');
+
+
+
+// var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-var bodyparser = require('body-parser');
 
 /* Database */
 const qArray = [];
@@ -17,10 +31,36 @@ app.use((req,res,next) =>{
   next();
 });
 
+
+//keep this method --soo
+mongoose.connect('mongodb://localhost/yockette', () => {
+	console.log("mongoose connected");
+});
+
+
 // Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
   res.status(200).send("Yocket List! Where Yockets meets Lists. Yocket List!");
 });
+
+
+//keep next two methods --soo
+app.post('/adduser', (req, res) => {
+  //User.create(req.body)
+  for (let i = 0; i < Testdata.users.length; i++) {
+    User.create(Testdata.users[i])
+    .then(data => {res.json(data)})
+    .catch((err) => {res.end(err)})
+  }
+})
+
+app.post('/addevent', (req, res) => {
+  //Event.create(req.body)
+	Event.create(Testdata.event)
+	.then(data => {res.json(data)})
+	.catch((err) => {res.end(err)})
+})
+
 
 // Post body do /queue should be formatted like so:
 // req.body { link: '<new Youtube link>'}
@@ -37,10 +77,10 @@ app.post('/queue', (req, res) => {
   console.log(req.body);
   if(req.body.method){
     if(req.body.method === 'delete'){
-      // doing app.delete resulted in interesting CORS issues 
+      // doing app.delete resulted in interesting CORS issues
       // with preflight requirements. Even with the cors Headers
       // above. We are hackily using req.body.method to simulate RESTful
-      // behavior. 
+      // behavior.
       console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
       qArray.shift();
       console.log(`/queue :: [DELETE] result of delete ${qArray}`);
