@@ -112,53 +112,48 @@ app.get('/', (req, res) => {
 //   }
 // })
 
+
+// getting queue to render on event(room) page
 app.get('/queue', (req, res) => {
   res.status(200).send(Testdata.queue)
 })
 
-
+//getting guestlist to render on event(room) page
 app.get('/guestlist' (req, res) => {
   res.status(200).send(Testdata.guestlist)
 })
 
-
-// Post body do /queue should be formatted like so:
-// req.body { link: '<new Youtube link>'}
-app.get('/queue', (req, res) => {
-  console.log(`/queue :: [GET] sending data ${qArray}`);
-  res.status(200).send(qArray);
-});
-
-// There are two body properties that should exist non exclusively.
-// If there is a method property set to 'delete' do DELETE behavior
-// If there is a link property set to a youtube url, save to the db
+//adding new data to queue, adds to the end of the list
 app.post('/queue', (req, res) => {
-  console.log(`/queue :: [POST] got data ${req.body.link}`);
-  console.log(req.body);
-  if(req.body.method){
-    if(req.body.method === 'delete'){
-      // doing app.delete resulted in interesting CORS issues
-      // with preflight requirements. Even with the cors Headers
-      // above. We are hackily using req.body.method to simulate RESTful
-      // behavior.
-      console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
-      qArray.shift();
-      console.log(`/queue :: [DELETE] result of delete ${qArray}`);
-      io.emit('newdata', qArray.length);
-      res.status(200).send("");
-      return;
-    }
-  }
-  if(!req.body.link){
-    res.status(400).send("no data supplied");
-    return;
-  }
-  qArray.push(req.body.link);
-  console.log(`/queue :: [POST] results in ${qArray}`);
-  io.emit('newdata', qArray.length);
-  res.status(200).send("git it");
+  Testdata.queue.push(req.body);
+  io.emit('newdata');
+  res.status(200).send("");
   res.end();
-});
+})
+
+
+
+// app.post('/queue', (req, res) => {
+//   if(req.body.method){
+//     if(req.body.method === 'delete'){
+//       console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
+//       qArray.shift();
+//       console.log(`/queue :: [DELETE] result of delete ${qArray}`);
+//       io.emit('newdata', qArray.length);
+//       res.status(200).send("");
+//       return;
+//     }
+//   }
+//   if(!req.body.link){
+//     res.status(400).send("no data supplied");
+//     return;
+//   }
+//   qArray.push(req.body.link);
+//   console.log(`/queue :: [POST] results in ${qArray}`);
+//   io.emit('newdata', qArray.length);
+//   res.status(200).send("git it");
+//   res.end();
+// });
 
 /* Socket and Server Setup */
 io.on('connect', (socket) => {
