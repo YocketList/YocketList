@@ -1,0 +1,39 @@
+body {
+  background-color: grey;
+}
+.Action-upVote, .Action-downVote, .Action-Fave {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+}
+.Action-upVote {
+    background-color: green;
+}
+.Action-downVote {
+    background-color: red;
+}
+.Action-Fave {
+    background-color: pink;
+}
+.GuestBox {
+  width: 30%;
+}
+.HistoryItem:nth-of-type(odd) {
+  background-color: #ccc;
+}
+.HistoryItem:nth-of-type(even) {
+  background-color: #eee;
+}
+.HistoryList {
+  float: left;
+  border: 1px dotted #aff;
+  width: 25%;
+}
+.SongList {
+  float: left;
+  width: 50%;
+}
+
+.SongList, .HistoryList, .GuestBox {
+  border: 1px dotted #aff;
+}
