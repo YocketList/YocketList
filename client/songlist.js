@@ -1,24 +1,24 @@
 import React from 'react';
 import Song from './song';
-const testData = require('../server/model/database')
 
-const SongList = (props) => {
+class SongList extends React.Component {
+  // constructor(props) {
+  //   super(props);
+  // }
+  render() {
   let list;
-  if (Array.isArray(props.songs)) {
-   list = props.songs.map(function(songObj, ind) {
+  console.log(this.props.songs);
+   list = this.props.songs.map(function(songObj, ind) {
       return <Song key={ind} data={songObj} />;
     });
-  } else {
-    list = testData.queue["5817dafb1da5550f5405937f"].map(function(songObj, ind) {
-       return <Song key={ind} data={songObj} />;
-     });
-  }
+  console.log(list);
   return (
     <div className="SongList">
       <h4>On Deck:</h4>
       {list}
     </div>
   )
-};
+}
+}
 
 export default SongList;

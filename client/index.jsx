@@ -1,51 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Container, Desklamp } from 'desklamp';
-import Nav from './nav';
+import { Router, Route, hashHistory } from 'react-router';
 // import Layout from './layout';
+import Profile from './profile';
 import HostApp from './hostapp';
 import GuestApp from './guestapp';
 import CreateEvent from './createevent';
-import CreateUser from './createuser';
+import Home from './home';
 require("./scss/main.scss");
-ReactDOM.render((
-  <Container>
-    <GuestApp name="guest" />
-    <HostApp name='host' />
-    <CreateUser />
-    <CreateEvent />
-  </Container>),
-  document.getElementById('App'));
 
-Desklamp.defaultRoute('createuser');
+ReactDOM.render(
+  <Router history={hashHistory}>
+    <Route path="/home" component={Home}>
+      {/* make them children of `App` */}
+      <Route path="profile" component={Profile}/>
+      <Route path="host/:eventId" component={HostApp}/>
+      <Route path="guest/:eventId" component={GuestApp}/>
+      <Route path="createevent" component={CreateEvent} />
+    </Route>
+  </Router>,
+  document.getElementById('App'))
 
-const initState = {
-  songs: [{
-  href: 'http://youtube.com/?stuff=cool',
-  title: 'Neat',
-}],
-};
-
-const powers = {};
-powers.formClick = function(link) {
-    // TODO this functionality should be replaced with socket logic.
-    // let newQueues = [...Desklamp.getState().songs];
-    // newQueues.push(link);
-    // Desklamp.updateState({ songs: newQueues});
-    console.log('Posting NEW LINK : ', link);
-    $.ajax({
-      url: HOST+"/queue",
-      type:"POST",
-      data: JSON.stringify({link: link}),
-      contentType:"application/json; charset=utf-8",
-      dataType:"json",
-    });
-};
-powers.getData = function() {
-    $.get(HOST + "/queue").done((data) => {
-        Desklamp.updateState({songs: data});
-      });
-};
-
-
-Desklamp.on(initState, powers, Nav);
+// Desklamp.defaultRoute('createevent');
