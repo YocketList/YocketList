@@ -25,7 +25,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 app.get('/auth/google/callback', (
     	passport.authenticate( 'google', { 
     		successRedirect: '/account',
-    		failureRedirect: '/login'
+    		failureRedirect: '/'
 })));
 
 passport.use(new GoogleStrategy({
@@ -57,7 +57,7 @@ app.get('/account', isAuthenticated, (req, res) => {
 
 app.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/login');
+  res.redirect('/');
 });
 
 function isAuthenticated(req, res, next) {
@@ -66,7 +66,7 @@ function isAuthenticated(req, res, next) {
       return next();
   }
 
-  res.redirect('/login');
+  res.redirect('/');
 }
 
 /* Database */
