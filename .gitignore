@@ -39,4 +39,4 @@ jspm_packages
 # distribution
 dist
 yarn.lock
-
+app.config
