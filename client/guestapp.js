@@ -1,8 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Song from './song';
+// import ReactDOM from 'react-dom';
+// import Song from './song';
 import Form from './queueform';
 import SongList from './songlist';
+import HistoryList from './historylist';
+import GuestBox from'./guestbox';
 import io from 'socket.io-client';
 
 const HOST = "http://localhost:3000";
@@ -19,10 +21,12 @@ class GuestApp extends React.Component {
     this.socket = io.connect(HOST);
     // Initialize Listener
     this.socket.on('newdata', () => {
-      this.props.powers.getData();
+      // this.props.powers.getData();
     });
     // redundant? Maybe just issue a newdata event on connect?
-    this.props.powers.getData();
+    if (this.props.powers.getData) {
+      this.props.powers.getData();
+    }
   }
 
   /**
@@ -31,12 +35,14 @@ class GuestApp extends React.Component {
    */
 
   render() {
-    console.log(this.props);
+    console.log('powers: ', this.props.powers, 'state: ', this.props.state);
     return (
       <div>
         <h1>GuestApp</h1>
+        <GuestBox guests={this.props.state.guests}/>
         <SongList songs={this.props.state.songs} />
         <Form key={0} formClick={this.props.powers.formClick} />
+        <HistoryList history={this.props.state.history} />
       </div>
     )
   }

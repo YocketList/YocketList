@@ -1,4 +1,7 @@
-const Nav = () => {
+import React from 'react';
+
+const Nav = ({state, powers}) => {
+  console.log("----NAV LOADED----");
   return (
     <nav className="nav">
       <ul>
@@ -7,3 +10,5 @@ const Nav = () => {
     </nav>
   );
 };
+
+export default Nav;
