@@ -14,9 +14,9 @@ const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
 const UserController = require('./controllers/UserController');
-// const AuthenticationController = require('./controllers/AuthenticationController');
-// const GuestController = require('./controllers/GuestController');
-// const EventController = require('./controllers/EventController');
+const AuthenticationController = require('./controllers/AuthenticationController');
+const GuestController = require('./controllers/GuestController');
+const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
 
 // const oauth = require('./google-passport');
@@ -33,7 +33,7 @@ passport.deserializeUser(function(user, done) {
   done(null, user.id);
 });
 
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google', passport.authenticate('google', { scope: ['account', 'email'] }));
 
 app.get('/auth/google/callback', (
     	passport.authenticate( 'google', {
@@ -55,7 +55,7 @@ passport.use(new GoogleStrategy({
 // Integrate with User model below
 // Add cookie upon login
 
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+User.findOneAndUpdate({ googleId: profile.id }, function (err, user) {
       return done(err, profile);
     });
   })
@@ -66,7 +66,7 @@ passport.use(new GoogleStrategy({
 
 
 app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res, next) => {
-  res.setCookie({googleId: 'test cookie'})
+  res.setCookie({googleId: req.user.googleId})
   next();
   //res.send...
 })
