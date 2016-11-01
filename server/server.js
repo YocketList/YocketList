@@ -52,9 +52,9 @@ passport.use(new GoogleStrategy({
 
 // Future Login and Logout Logic
 
+
 app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res) => {
   res.setCookie({googleId: 'test cookie'})
-  
 })
 
 app.get('/logout', function(req, res){
