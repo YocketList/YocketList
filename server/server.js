@@ -1,4 +1,5 @@
-const app = require('express')();
+const express = require('express')
+const app = express();
 const fs = require('fs');
 const path = require('path');
 const http = require('http').Server(app);
@@ -11,9 +12,10 @@ const AuthenticationController = require('./controllers/AuthenticationController
 const GuestController = require('./controllers/GuestController');
 const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
+
 // const oauth = require('./google-passport');
 
-// app.use( express.static('client'));
+app.use( express.static(__dirname + '/client'));
 app.use( passport.initialize());
 app.use( passport.session());
 
