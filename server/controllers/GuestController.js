@@ -3,9 +3,10 @@ const GuestController = {};
 GuestController.list = [];
 
 GuestController.addToList = (req, res, next) => {
-  let currentUser = req.user.googleId;
-  //query for fav list?
-  GuestController.list.push(currentUser);
+  console.log('GuestController')
+  // let currentUser = req.user.google_id;
+  // //query for fav list?
+  // GuestController.list.push(currentUser);
   next();
 }
 

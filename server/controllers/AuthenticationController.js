@@ -1,11 +1,11 @@
 const AuthenticationController = {};
 
 AuthenticationController.isAuthenticated = (req, res, next) => {
-console.log(profile, req.user)
-  if (req.user.authenticated()) {
-      return next();
+  if (req.user) {
+    res.cookie('google_id', req.user.google_id);
+    console.log(res.cookie)
+    return next();
   }
-
   res.redirect('/');
 }
 

@@ -17,28 +17,16 @@ const AuthenticationController = require('./controllers/AuthenticationController
 const GuestController = require('./controllers/GuestController');
 const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
-
+const session = require('express-session');
+const cookieParser = require('cookie-parser')
+mongoose.connect('mongodb://localhost/yockette', () => {
+	console.log("mongoose connected");
+});
 // const oauth = require('./google-passport');
 
-app.use( express.static(__dirname + '/client'));
-app.use( passport.initialize());
-app.use( passport.session());
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function(user, done) {
-  done(null, user.id);
-});
-
-app.get('/auth/google', passport.authenticate('google', { scope: ['account', 'email'] }));
-
-app.get('/auth/google/callback', (
-    	passport.authenticate( 'google', {
-    		successRedirect: '/account',
-    		failureRedirect: '/'
-})));
+app.use( express.static(path.join(__dirname, 'dist')));
+app.use( session({ path: '*', secret: 'YukeBox', httpOnly: true, secure: false, maxAge: null }));
+app.use( cookieParser() );
 
 passport.use(new GoogleStrategy({
     clientID:     creds.GOOGLE_CLIENT_ID,
@@ -46,28 +34,64 @@ passport.use(new GoogleStrategy({
     callbackURL: creds.CALLBACK_URL,
     passReqToCallback   : true
   },
-  function(request, accessToken, refreshToken, profile, done) {
+  function(req, accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
-      console.log(profile.id)
 
-// Currently throwing error on User.findOrCreates
-// Integrate with User model below
-// Add cookie upon login
-
-User.findOneAndUpdate({ googleId: profile.id }, function (err, user) {
-      return done(err, profile);
-    });
-  })
+      User.findOneAndUpdate({ google_id: profile.id, username: profile.name.givenName }, { expire: new Date() }, { upsert: true }, function (err, user) {
+        if (err) {
+          console.log(err);
+          done();
+        }
+        if (!user) {
+          user = new User({
+            google_id: profile.id,
+            username: profile.name.givenName,
+            favlist: []
+          })
+          user.save();
+        }
+        if (user) {
+          return done(null, user);
+        }
+      });
+    })
   }
 ));
 
+app.use( passport.initialize());
+app.use( passport.session());
+
+passport.serializeUser(function(user, done) {
+  console.log('Serializing');
+  done(null, {
+    google_id: user.google_id,
+    username: user.username
+  });
+});
+
+passport.deserializeUser(function(user, done) {
+  console.log('Deserializing');
+  User.findOne({google_id: user.google_id}, function(err, user) {
+    done(err, user);
+  });
+});
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', (
+    	passport.authenticate( 'google', {
+    		successRedirect: '/account',
+    		failureRedirect: '/'
+})));
+
 // Future Login and Logout Logic
 
-
 app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res, next) => {
-  res.setCookie({googleId: req.user.googleId})
-  next();
-  //res.send...
+  res.status(200).sendFile(path.join(__dirname, '../dist/index.html'));
+})
+
+app.get('/bundle.js', (req, res, next) => {
+  res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));  
 })
 
 app.post('/create-event', EventController.addToList)
@@ -92,14 +116,11 @@ app.use((req,res,next) =>{
 
 
 //keep this method --soo
-mongoose.connect('mongodb://localhost/yockette', () => {
-	console.log("mongoose connected");
-});
 
 
 // Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
+  res.status(200).sendFile(path.join(__dirname, '../dist/login.html'));
 });
 
 
