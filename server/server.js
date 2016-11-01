@@ -24,7 +24,7 @@ app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'em
 
 app.get('/auth/google/callback', (
     	passport.authenticate( 'google', { 
-    		successRedirect: '/',
+    		successRedirect: '/account',
     		failureRedirect: '/login'
 })));
 
@@ -50,28 +50,24 @@ passport.use(new GoogleStrategy({
 
 // Future Login and Logout Logic
 
-app.get('/login', (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
+app.get('/account', isAuthenticated, (req, res) => {
+  res.setCookie({googleId: 'test cookie'})
+  
+})
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/login');
 });
 
-// app.get('/account', (req, res) => {
-//   res.setCookie({googleId: })
-  
-// })
+function isAuthenticated(req, res, next) {
 
-// app.get('/logout', function(req, res){
-//   req.logout();
-//   res.redirect('/');
-// });
+  if (req.user.authenticated()) {
+      return next();
+  }
 
-// function isLoggedIn(req, res, next) {
-
-//     if (req.isAuthenticated()) {
-//         return next();
-//     }
-
-//     res.redirect('/');
-// }
+  res.redirect('/login');
+}
 
 /* Database */
 const qArray = [];
@@ -88,7 +84,7 @@ app.use((req,res,next) =>{
 
 // Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
-  res.status(200).send("Yocket List! Where Yockets meets Lists. Yocket List!");
+  res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
 });
 
 // Post body do /queue should be formatted like so:
