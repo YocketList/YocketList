@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "body-parser": "^1.15.2",
+    "desklamp": "^0.1.4",
     "lodash.isequal": "^4.4.0",
     "passport": "^0.3.2",
     "passport-google-oauth2": "^0.1.6",
