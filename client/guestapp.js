@@ -19,10 +19,12 @@ class GuestApp extends React.Component {
     this.socket = io.connect(HOST);
     // Initialize Listener
     this.socket.on('newdata', () => {
-      this.props.powers.getData();
+      // this.props.powers.getData();
     });
     // redundant? Maybe just issue a newdata event on connect?
-    this.props.powers.getData();
+    if (this.props.powers.getData) {
+      this.props.powers.getData();
+    }
   }
 
   /**
@@ -31,11 +33,13 @@ class GuestApp extends React.Component {
    */
 
   render() {
-    console.log(this.props);
+    console.log('powers: ', this.props.powers.getData);
+    console.log('state: ', this.props.state);
+    const songs = this.props.state.songs || ['a song'];
     return (
       <div>
         <h1>GuestApp</h1>
-        <SongList songs={this.props.state.songs} />
+        <SongList data={this.props.state} />
         <Form key={0} formClick={this.props.powers.formClick} />
       </div>
     )
