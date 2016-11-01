@@ -6,10 +6,11 @@ const io = require('socket.io')(http);
 const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
-// const oauth = require('./google-passport');
-const AuthenticationController = require('./AuthenticationController');
-const GuestController = require('./GuestController');
+const UserController = require('./controllers/UserController');
+const AuthenticationController = require('./controllers/AuthenticationController');
+const GuestController = require('./controllers/GuestController');
 const creds = require('../app.config');
+// const oauth = require('./google-passport');
 
 app.use( passport.initialize());
 app.use( passport.session());
@@ -55,6 +56,7 @@ passport.use(new GoogleStrategy({
 
 app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res) => {
   res.setCookie({googleId: 'test cookie'})
+  //res.send...
 })
 
 app.get('/logout', function(req, res){
