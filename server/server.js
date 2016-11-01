@@ -39,13 +39,14 @@ passport.use(new GoogleStrategy({
   },
   function(request, accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
+      console.log(profile.id)
 
 // Currently throwing error on User.findOrCreates
 // Integrate with User model below
 // Add cookie upon login
 
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return done(err, user);
+      return done(err, profile);
     });
   })
   }
@@ -54,8 +55,9 @@ passport.use(new GoogleStrategy({
 // Future Login and Logout Logic
 
 
-app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res) => {
+app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res, next) => {
   res.setCookie({googleId: 'test cookie'})
+  next();
   //res.send...
 })
 
@@ -63,15 +65,6 @@ app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
-function isAuthenticated(req, res, next) {
-
-  if (req.user.authenticated()) {
-      return next();
-  }
-
-  res.redirect('/');
-}
 
 /* Database */
 const qArray = [];
