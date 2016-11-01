@@ -7,6 +7,8 @@ const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
 // const oauth = require('./google-passport');
+const AuthenticationController = require('./AuthenticationController');
+const GuestController = require('./GuestController');
 const creds = require('../app.config');
 
 app.use( passport.initialize());
@@ -50,7 +52,7 @@ passport.use(new GoogleStrategy({
 
 // Future Login and Logout Logic
 
-app.get('/account', isAuthenticated, (req, res) => {
+app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res) => {
   res.setCookie({googleId: 'test cookie'})
   
 })
