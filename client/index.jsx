@@ -1,13 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Container, Desklamp } from 'desklamp';
-import Layout from './layout';
+import Nav from './nav';
+// import Layout from './layout';
 import HostApp from './hostapp';
 import GuestApp from './guestapp';
 import CreateEvent from './createevent';
 import CreateUser from './createuser';
-import Nav from './nav';
-
+require("./scss/main.scss");
 ReactDOM.render((
   <Container>
     <GuestApp name="guest" />
@@ -17,9 +17,7 @@ ReactDOM.render((
   </Container>),
   document.getElementById('App'));
 
-console.log('desklamp2:', Desklamp.defaultRoute);
-
-// Desklamp.defaultRoute('createuser');
+Desklamp.defaultRoute('createuser');
 
 const initState = {
   songs: [{
@@ -31,9 +29,10 @@ const initState = {
 const powers = {};
 powers.formClick = function(link) {
     // TODO this functionality should be replaced with socket logic.
-    let newQueues = [...Desklamp.getState().songs];
-    newQueues.push(link);
-    Desklamp.updateState({ songs: newQueues});
+    // let newQueues = [...Desklamp.getState().songs];
+    // newQueues.push(link);
+    // Desklamp.updateState({ songs: newQueues});
+    console.log('Posting NEW LINK : ', link);
     $.ajax({
       url: HOST+"/queue",
       type:"POST",

@@ -70,4 +70,4 @@ let event = {
   eventHistory: []
 }
 
-module.exports = {users, event};
+module.exports = {users, event, guestList, queue};
