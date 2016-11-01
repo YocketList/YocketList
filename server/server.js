@@ -2,7 +2,6 @@ const express = require('express')
 const app = express();
 // const jsonParser = bodyParser.json();
 const path = require('path');
-//keep next 4 lines --soo
 const mongoose = require('mongoose');
 const User = require('./model/usermodel');
 const Event = require('./model/eventmodel');
@@ -71,10 +70,7 @@ app.get('/account', AuthenticationController.isAuthenticated, GuestController.ad
   //res.send...
 })
 
-app.get('/create-event', EventController.addToList, (req, res, next) => {
-  // Redirect to new room
-  next();
-})
+app.post('/create-event', EventController.addToList)
 
 app.get('/logout', function(req, res){
   req.logout();
@@ -107,22 +103,14 @@ app.get('/', (req, res) => {
 });
 
 
-//keep next two methods --soo
-app.post('/adduser', (req, res) => {
-  //User.create(req.body)
-  for (let i = 0; i < Testdata.users.length; i++) {
-    User.create(Testdata.users[i])
-    .then(data => {res.json(data)})
-    .catch((err) => {res.end(err)})
-  }
-})
-
-app.post('/addevent', (req, res) => {
-  //Event.create(req.body)
-	Event.create(Testdata.event)
-	.then(data => {res.json(data)})
-	.catch((err) => {res.end(err)})
-})
+// app.post('/adduser', (req, res) => {
+//   //User.create(req.body)
+//   for (let i = 0; i < Testdata.users.length; i++) {
+//     User.create(Testdata.users[i])
+//     .then(data => {res.json(data)})
+//     .catch((err) => {res.end(err)})
+//   }
+// })
 
 
 // Post body do /queue should be formatted like so:
