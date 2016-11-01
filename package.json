@@ -52,6 +52,8 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "lodash.isequal": "^4.4.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth2": "^0.1.6",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
     "youtube-player": "^3.0.4"
