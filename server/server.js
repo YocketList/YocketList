@@ -112,6 +112,15 @@ app.get('/', (req, res) => {
 //   }
 // })
 
+app.get('/queue', (req, res) => {
+  res.status(200).send(Testdata.queue)
+})
+
+
+app.get('/guestlist' (req, res) => {
+  res.status(200).send(Testdata.guestlist)
+})
+
 
 // Post body do /queue should be formatted like so:
 // req.body { link: '<new Youtube link>'}
