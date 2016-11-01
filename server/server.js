@@ -1,14 +1,27 @@
-const app = require('express')();
-const fs = require('fs');
+const express = require('express')
+const app = express();
+// const jsonParser = bodyParser.json();
 const path = require('path');
+//keep next 4 lines --soo
+const mongoose = require('mongoose');
+const User = require('./model/usermodel');
+const Event = require('./model/eventmodel');
+const Testdata = require('./model/database');
+var io = require('socket.io')(http);
+const fs = require('fs');
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
 const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
-// const oauth = require('./google-passport');
+const UserController = require('./controllers/UserController');
+const AuthenticationController = require('./controllers/AuthenticationController');
+const GuestController = require('./controllers/GuestController');
+const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
 
+// const oauth = require('./google-passport');
+
+app.use( express.static(__dirname + '/client'));
 app.use( passport.initialize());
 app.use( passport.session());
 
@@ -23,7 +36,7 @@ passport.deserializeUser(function(user, done) {
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 app.get('/auth/google/callback', (
-    	passport.authenticate( 'google', { 
+    	passport.authenticate( 'google', {
     		successRedirect: '/account',
     		failureRedirect: '/'
 })));
@@ -36,13 +49,14 @@ passport.use(new GoogleStrategy({
   },
   function(request, accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
+      console.log(profile.id)
 
 // Currently throwing error on User.findOrCreates
 // Integrate with User model below
 // Add cookie upon login
 
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return done(err, user);
+      return done(err, profile);
     });
   })
   }
@@ -50,24 +64,22 @@ passport.use(new GoogleStrategy({
 
 // Future Login and Logout Logic
 
-app.get('/account', isAuthenticated, (req, res) => {
+
+app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res, next) => {
   res.setCookie({googleId: 'test cookie'})
-  
+  next();
+  //res.send...
+})
+
+app.get('/create-event', EventController.addToList, (req, res, next) => {
+  // Redirect to new room
+  next();
 })
 
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
-function isAuthenticated(req, res, next) {
-
-  if (req.user.authenticated()) {
-      return next();
-  }
-
-  res.redirect('/');
-}
 
 /* Database */
 const qArray = [];
@@ -82,10 +94,36 @@ app.use((req,res,next) =>{
   next();
 });
 
+
+//keep this method --soo
+mongoose.connect('mongodb://localhost/yockette', () => {
+	console.log("mongoose connected");
+});
+
+
 // Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
 });
+
+
+//keep next two methods --soo
+app.post('/adduser', (req, res) => {
+  //User.create(req.body)
+  for (let i = 0; i < Testdata.users.length; i++) {
+    User.create(Testdata.users[i])
+    .then(data => {res.json(data)})
+    .catch((err) => {res.end(err)})
+  }
+})
+
+app.post('/addevent', (req, res) => {
+  //Event.create(req.body)
+	Event.create(Testdata.event)
+	.then(data => {res.json(data)})
+	.catch((err) => {res.end(err)})
+})
+
 
 // Post body do /queue should be formatted like so:
 // req.body { link: '<new Youtube link>'}
@@ -102,10 +140,10 @@ app.post('/queue', (req, res) => {
   console.log(req.body);
   if(req.body.method){
     if(req.body.method === 'delete'){
-      // doing app.delete resulted in interesting CORS issues 
+      // doing app.delete resulted in interesting CORS issues
       // with preflight requirements. Even with the cors Headers
       // above. We are hackily using req.body.method to simulate RESTful
-      // behavior. 
+      // behavior.
       console.log(`/queue :: [DELETE] removing first item from ${qArray}`);
       qArray.shift();
       console.log(`/queue :: [DELETE] result of delete ${qArray}`);
