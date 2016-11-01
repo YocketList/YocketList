@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 // import Player from './player';
 import Youtube from 'react-youtube';
 import io from 'socket.io-client';
-import QueueList from './queuelist';
+import SongList from './songlist';
 
 const HOST = "http://localhost:3000";
 
-class PlayerApp extends React.Component {
+class HostApp extends React.Component {
   constructor() {
     super();
-    this.state = { 
+    this.state = {
       urls : []
     };
     this.handlePlayerEnd = this.handlePlayerEnd.bind(this);
@@ -71,7 +71,7 @@ class PlayerApp extends React.Component {
 
   render() {
     console.log(this.state.urls);
-    // Can we make it so the current video played is not 
+    // Can we make it so the current video played is not
     // displayed in the queue?
       if(this.state.urls.length > 0){
         var videoUrl = this.state.urls[0].split('=')[1];
@@ -80,10 +80,10 @@ class PlayerApp extends React.Component {
     return (
     <div className="youtube-wrapper">
       <Youtube videoId={videoUrl} onEnd={this.handlePlayerEnd} onStateChange={this.handleStateChange}/>
-      <QueueList queues={this.state.urls}/>
+      <SongList songs={this.state.urls}/>
     </div>
     );
   }
 }
 
-export default PlayerApp;
+export default HostApp;
