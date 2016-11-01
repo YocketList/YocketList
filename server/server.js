@@ -1,31 +1,27 @@
-const app = require('express')();
-const bodyparser = require('body-parser');
+const express = require('express')
+const app = express();
 // const jsonParser = bodyParser.json();
 const path = require('path');
-
-
-
 //keep next 4 lines --soo
 const mongoose = require('mongoose');
 const User = require('./model/usermodel');
 const Event = require('./model/eventmodel');
 const Testdata = require('./model/database');
-
-
-
-// var app = require('express')();
-var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const fs = require('fs');
-const path = require('path');
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
 const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
-// const oauth = require('./google-passport');
+const UserController = require('./controllers/UserController');
+const AuthenticationController = require('./controllers/AuthenticationController');
+const GuestController = require('./controllers/GuestController');
+const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
 
+// const oauth = require('./google-passport');
+
+app.use( express.static(__dirname + '/client'));
 app.use( passport.initialize());
 app.use( passport.session());
 
@@ -53,13 +49,14 @@ passport.use(new GoogleStrategy({
   },
   function(request, accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
+      console.log(profile.id)
 
 // Currently throwing error on User.findOrCreates
 // Integrate with User model below
 // Add cookie upon login
 
     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return done(err, user);
+      return done(err, profile);
     });
   })
   }
@@ -67,24 +64,22 @@ passport.use(new GoogleStrategy({
 
 // Future Login and Logout Logic
 
-app.get('/account', isAuthenticated, (req, res) => {
-  res.setCookie({googleId: 'test cookie'})
 
+app.get('/account', AuthenticationController.isAuthenticated, GuestController.addToList, (req, res, next) => {
+  res.setCookie({googleId: 'test cookie'})
+  next();
+  //res.send...
+})
+
+app.get('/create-event', EventController.addToList, (req, res, next) => {
+  // Redirect to new room
+  next();
 })
 
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
 });
-
-function isAuthenticated(req, res, next) {
-
-  if (req.user.authenticated()) {
-      return next();
-  }
-
-  res.redirect('/');
-}
 
 /* Database */
 const qArray = [];
