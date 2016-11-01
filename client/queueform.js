@@ -4,7 +4,7 @@ import React from 'react';
 class QueueForm extends React.Component {
   render() {
     return (
-      <div>
+      <div className="Form-Container">
         <form name='addLink'>
           <input id='link' type="text" name="link"></input>
           <button onClick={this.handleClick.bind(this)} onKeyPress={this._handleChange} type="submit" value="Submit">Submit</button>
