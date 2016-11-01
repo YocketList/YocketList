@@ -9,9 +9,11 @@ const passport = require('passport');
 const UserController = require('./controllers/UserController');
 const AuthenticationController = require('./controllers/AuthenticationController');
 const GuestController = require('./controllers/GuestController');
+const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
 // const oauth = require('./google-passport');
 
+// app.use( express.static('client'));
 app.use( passport.initialize());
 app.use( passport.session());
 
@@ -59,6 +61,11 @@ app.get('/account', AuthenticationController.isAuthenticated, GuestController.ad
   res.setCookie({googleId: 'test cookie'})
   next();
   //res.send...
+})
+
+app.get('/create-event', EventController.addToList, (req, res, next) => {
+  // Redirect to new room
+  next();
 })
 
 app.get('/logout', function(req, res){
