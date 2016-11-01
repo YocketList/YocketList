@@ -16,10 +16,78 @@ const Testdata = require('./model/database');
 // var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+const fs = require('fs');
+const path = require('path');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const bodyparser = require('body-parser');
+const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
+const passport = require('passport');
+// const oauth = require('./google-passport');
+const creds = require('../app.config');
+
+app.use( passport.initialize());
+app.use( passport.session());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+app.get('/auth/google/callback', (
+    	passport.authenticate( 'google', {
+    		successRedirect: '/account',
+    		failureRedirect: '/'
+})));
+
+passport.use(new GoogleStrategy({
+    clientID:     creds.GOOGLE_CLIENT_ID,
+    clientSecret: creds.GOOGLE_CLIENT_SECRET,
+    callbackURL: creds.CALLBACK_URL,
+    passReqToCallback   : true
+  },
+  function(request, accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+
+// Currently throwing error on User.findOrCreates
+// Integrate with User model below
+// Add cookie upon login
+
+    User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      return done(err, user);
+    });
+  })
+  }
+));
+
+// Future Login and Logout Logic
+
+app.get('/account', isAuthenticated, (req, res) => {
+  res.setCookie({googleId: 'test cookie'})
+
+})
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
+function isAuthenticated(req, res, next) {
+
+  if (req.user.authenticated()) {
+      return next();
+  }
+
+  res.redirect('/');
+}
 
 /* Database */
 const qArray = [];
-
 
 /* Express Middleware */
 app.use(bodyparser.json());
@@ -40,7 +108,7 @@ mongoose.connect('mongodb://localhost/yockette', () => {
 
 // Easter egg for API server <3 YOCKET LIST
 app.get('/', (req, res) => {
-  res.status(200).send("Yocket List! Where Yockets meets Lists. Yocket List!");
+  res.status(200).sendFile(path.join(__dirname, '../client/login.html'));
 });
 
 
