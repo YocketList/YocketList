@@ -22,7 +22,10 @@ console.log('desklamp2:', Desklamp.defaultRoute);
 // Desklamp.defaultRoute('createuser');
 
 const initState = {
-  songs: ['a song'],
+  songs: [{
+  href: 'http://youtube.com/?stuff=cool',
+  title: 'Neat',
+}],
 };
 
 const powers = {};

@@ -14,9 +14,9 @@ const bodyparser = require('body-parser');
 const GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 const passport = require('passport');
 const UserController = require('./controllers/UserController');
-const AuthenticationController = require('./controllers/AuthenticationController');
-const GuestController = require('./controllers/GuestController');
-const EventController = require('./controllers/EventController');
+// const AuthenticationController = require('./controllers/AuthenticationController');
+// const GuestController = require('./controllers/GuestController');
+// const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
 
 // const oauth = require('./google-passport');

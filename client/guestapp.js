@@ -35,11 +35,10 @@ class GuestApp extends React.Component {
   render() {
     console.log('powers: ', this.props.powers.getData);
     console.log('state: ', this.props.state);
-    const songs = this.props.state.songs || ['a song'];
     return (
       <div>
         <h1>GuestApp</h1>
-        <SongList data={this.props.state} />
+        <SongList songs={this.props.state.songs} />
         <Form key={0} formClick={this.props.powers.formClick} />
       </div>
     )
