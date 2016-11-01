@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha test",
     "start": "webpack-dev-server --inline --hot",
-    "build": "webpack",
+    "build": "webpack -w",
     "serve": "nodemon server/server.js"
   },
   "repository": {
