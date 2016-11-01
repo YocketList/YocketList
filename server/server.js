@@ -18,12 +18,16 @@ const AuthenticationController = require('./controllers/AuthenticationController
 const GuestController = require('./controllers/GuestController');
 const EventController = require('./controllers/EventController');
 const creds = require('../app.config');
+const session = require('express-session');
+const cookieParser = require('cookie-parser')
 mongoose.connect('mongodb://localhost/yockette', () => {
 	console.log("mongoose connected");
 });
 // const oauth = require('./google-passport');
 
 app.use( express.static(path.join(__dirname, 'dist')));
+app.use( session({ path: '*', secret: 'YukeBox', httpOnly: true, secure: false, maxAge: null }));
+app.use( cookieParser() );
 
 passport.use(new GoogleStrategy({
     clientID:     creds.GOOGLE_CLIENT_ID,
@@ -59,7 +63,7 @@ app.use( passport.initialize());
 app.use( passport.session());
 
 passport.serializeUser(function(user, done) {
-  // console.log(user);
+  console.log('Serializing');
   done(null, {
     google_id: user.google_id,
     username: user.username
@@ -67,7 +71,7 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(user, done) {
-  // console.log(user);
+  console.log('Deserializing');
   User.findOne({google_id: user.google_id}, function(err, user) {
     done(err, user);
   });

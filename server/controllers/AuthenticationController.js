@@ -1,12 +1,12 @@
 const AuthenticationController = {};
 
 AuthenticationController.isAuthenticated = (req, res, next) => {
-  console.log('AuthenticationController', req.user)
-  // if (req.user) {
-      return next();
-  // }
-
-  // res.redirect('/');
+  if (req.user) {
+    res.cookie('google_id', req.user.google_id);
+    console.log(res.cookie)
+    return next();
+  }
+  res.redirect('/');
 }
 
 module.exports = AuthenticationController;
