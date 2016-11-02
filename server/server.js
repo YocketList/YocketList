@@ -92,7 +92,7 @@ app.get('/account', AuthenticationController.isAuthenticated, GuestController.ad
 })
 
 app.get('/bundle.js', (req, res, next) => {
-  res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));  
+  res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));
 })
 
 app.post('/create-event', EventController.addToList)
@@ -124,17 +124,6 @@ app.get('/', (req, res) => {
   res.status(200).sendFile(path.join(__dirname, '../dist/login.html'));
 });
 
-
-// app.post('/adduser', (req, res) => {
-//   //User.create(req.body)
-//   for (let i = 0; i < Testdata.users.length; i++) {
-//     User.create(Testdata.users[i])
-//     .then(data => {res.json(data)})
-//     .catch((err) => {res.end(err)})
-//   }
-// })
-
-
 // getting queue to render on event(room) page
 app.get('/queue', (req, res) => {
   res.status(200).send(Testdata.queue)
@@ -149,9 +138,32 @@ app.get('/guestlist', (req, res) => {
 app.post('/queue', (req, res) => {
   // Testdata.queue.push(req.body);
   io.emit('newdata', {songs: req.body, history: HistoryController.list, guests: GuestController.list});
+app.post('/addqueue', (req, res) => {
+  Testdata.queue.push(req.body);
+  io.emit('newQueue', Testdata.queue);
   res.status(200).send("");
   res.end();
 })
+
+
+//1.
+app.post('/joinevent', (req, res) => {
+  Event.findOne({eventName: req.body.eventName})
+  .where('eventPassword').equals(req.body.eventPassword)
+  .then(event => res.json(event))
+  .catch(err => res.send(err))
+})
+
+
+//2.
+app.get('/history', (req, res) => {
+  //find the event table with the event_id
+  //send the event_id.history
+  Event.findOne({_id: req.body._id})
+})
+
+//3.
+//when url(music) finishes add thtat to that event's histiry
 
 
 
@@ -194,4 +206,4 @@ http.listen(3000, () => {
  *  - when a player window deletes an item from the database
  */
 
-module.export = app;
+module.exports = app;
