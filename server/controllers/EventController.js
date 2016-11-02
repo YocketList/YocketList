@@ -1,3 +1,5 @@
+const Event = require('../model/eventmodel');
+
 const EventController = {};
 EventController.list = [];
 
