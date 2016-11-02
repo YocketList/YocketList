@@ -1,21 +1,8 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, hashHistory } from 'react-router';
-import Layout from './layout';
-import PlayerApp from './playerapp';
-import QueueApp from './queueapp';
-
+import React from 'react';
+import App from './app';
+require("./scss/main.scss");
 
 ReactDOM.render(
-  <Router history={hashHistory}>
-    <Route path="/" component={Layout}>
-      {/* make them children of `App` */}
-      <Route path="player" component={PlayerApp}/>
-      <Route path="queue" component={QueueApp}/>
-    </Route>
-  </Router>,
+  <App />,
   document.getElementById('App'))
-
-
-
-

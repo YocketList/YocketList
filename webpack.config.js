@@ -1,39 +1,49 @@
+const webpack = require('webpack');
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const PATHS = {
+  app: './client/index.jsx',
+  html: './client/index.html',
+  dist: path.join(__dirname, 'dist'),
+};
 
 module.exports = {
-  devServer: {
-    proxy: {
-      '**': {target: 'http://localhost:3000', secure:false},
-    }
-  },
-  // specifies the entry files
-  // when provided with array it will go through all the files
   entry: {
-    index: './client/index.jsx'
+    javascript: PATHS.app,
+    html: PATHS.html,
   },
-  // specifies where webpack will dump the compiled files
-  output: { 
-    path: './dist/',
-    filename: '[name].bundle.js',
+  output: {
+    path: PATHS.dist,
+    publicPath: '/',
+    filename: 'bundle.js',
   },
-  // loader specifies the preprocessor
+  devServer: {
+    contentBase: PATHS.dist,
+  },
+  eslint: {
+    emitWarning: true,
+  },
   module: {
     loaders: [
       {
-        test: /\.jsx?/, 
-        loader: 'babel',
-        include: path.join(__dirname, 'client')
+        test: /\.html$/,
+        loader: 'file?name=[name].[ext]',
+      }, {
+        test: /\.(js|jsx)$/,
+        exclude: /node_modules/,
+        loaders: ['babel-loader'],
+      }, {
+        test: /\.(css|scss)$/,
+        loaders: ['style', 'css', 'sass']
       }
-    ]
-  }, 
-  // additional functionality. htmlwebpackplugin or minify goes here
-  plugins: [
-    // Auto generate our html page https://www.npmjs.com/package/html-webpack-plugin
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, 'client/index.html'),
-      appMountId: 'App',
-      title: 'Index',
-    })
-  ]
+    ],
+  },
+  externals: {
+    'cheerio': 'window',
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+  },
 };

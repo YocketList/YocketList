@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 
 /**
@@ -10,10 +10,9 @@ class Layout extends React.Component {
  render() {
     return (
       <div>
-        <h1>Yocket List</h1>
+        <h1>YukeToob</h1>
         <ul role="nav">
-          <li><Link to="player">PlayerApp</Link></li>
-          <li><Link to="queue">QueueApp</Link></li>
+          <li><Link to="home">Home</Link></li>
         </ul>
         {this.props.children}
       </div>

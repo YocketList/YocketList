@@ -1,0 +1,62 @@
+body {
+  background-color: grey;
+}
+.Action-upVote, .Action-downVote, .Action-Fave {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+}
+.Action-upVote {
+    background-color: green;
+}
+.Action-downVote {
+    background-color: red;
+}
+.Action-Fave {
+    background-color: pink;
+}
+.SongList-Form-container {
+  width: 45%;
+  margin-left: 2.5%;
+  float: left;
+}
+.Form-Container input {
+  width: 85%;
+}
+.GuestBox {
+  width: 30%;
+  margin: 2em auto;
+  margin-top: 0;
+}
+.hidden {
+  display: none;
+}
+.HistoryItem:nth-of-type(odd) {
+  background-color: #ccc;
+}
+.HistoryItem:nth-of-type(even) {
+  background-color: #eee;
+}
+.HistoryList {
+  float: left;
+  border: 1px dotted #aff;
+  width: 45%;
+  margin-left: 5%;
+  border-radius: 5px;
+  padding: 0px;
+}
+.HistoryList h4, .SongList h4, .GuestBox h4, {
+  background-color: dodgerblue;
+  margin : 0em;
+  padding : 0.3em;
+
+}
+.SongList {
+
+}
+
+.SongList, .HistoryList, .GuestBox {
+  border: 1px dotted #aff;
+  border-radius: 5px;
+  padding: 0px;
+}
