@@ -135,9 +135,11 @@ app.get('/guestlist', (req, res) => {
 })
 
 //adding new data to queue, adds to the end of the list
+
 app.post('/queue', (req, res) => {
   // Testdata.queue.push(req.body);
   io.emit('newdata', {songs: req.body, history: HistoryController.list, guests: GuestController.list});
+})
 app.post('/addqueue', (req, res) => {
   Testdata.queue.push(req.body);
   io.emit('newQueue', Testdata.queue);
@@ -206,4 +208,4 @@ http.listen(3000, () => {
  *  - when a player window deletes an item from the database
  */
 
-module.exports = app;
+module.export = app;
