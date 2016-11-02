@@ -138,6 +138,7 @@ app.get('/guestlist', (req, res) => {
 app.post('/queue', (req, res) => {
   // Testdata.queue.push(req.body);
   io.emit('newdata', {songs: req.body, history: HistoryController.list, guests: GuestController.list});
+});
 app.post('/addqueue', (req, res) => {
   Testdata.queue.push(req.body);
   io.emit('newQueue', Testdata.queue);
