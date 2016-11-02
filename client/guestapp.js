@@ -13,13 +13,7 @@ const HOST = "http://localhost:3000";
 class GuestApp extends React.Component {
   constructor(props) {
     super(props);
-    const ourStuff = testData.queue["5817dafb1da5550f5405937f"];
-    this.state = {
-      history: ourStuff,
-      songs: ourStuff,
-      guests: testData.guestList["5817dafb1da5550f5405937f"],
-    };
-  }
+}
   /**
    * We GET our initial set of data here after the first render
    * has been made.
@@ -27,17 +21,13 @@ class GuestApp extends React.Component {
   componentDidMount() {
     this.socket = io.connect(HOST);
     // Initialize Listener
-    this.socket.on('newdata', () => {
-      this.getData();
+    this.socket.on('event', () => {
+      this.props.getData();
     });
     // redundant? Maybe just issue a newdata event on connect?
-    this.getData();
+    this.props.getData();
   }
-  getData() {
-      $.get(HOST + "/queue").done((data) => {
-          // this.setState({songs: data});
-        });
-  }
+
   formClick(link) {
       console.log('Posting NEW LINK : ', link);
       $.ajax({

@@ -1,4 +1,5 @@
 const UserController = {};
+const User = require('../model/usermodel');
 
 UserController.updateUser = (req, res, next) => {
   User.update({ google_id: req.user.id }, {

@@ -27,6 +27,14 @@ mongoose.connect('mongodb://localhost/yockette', () => {
 app.use( express.static(path.join(__dirname, 'dist')));
 app.use( session({ path: '*', secret: 'YukeBox', httpOnly: true, secure: false, maxAge: null }));
 app.use( cookieParser() );
+app.use(bodyparser.json());
+// CORS headers
+app.use((req,res,next) =>{
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+	next();
+});
 
 passport.use(new GoogleStrategy({
     clientID:     creds.GOOGLE_CLIENT_ID,
@@ -91,7 +99,7 @@ app.get('/account', AuthenticationController.isAuthenticated, GuestController.ad
 })
 
 app.get('/bundle.js', (req, res, next) => {
-  res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));  
+  res.status(200).sendFile(path.join(__dirname, '../dist/bundle.js'));
 })
 
 app.post('/create-event', EventController.addToList)
@@ -105,14 +113,6 @@ app.get('/logout', function(req, res){
 const qArray = [];
 
 /* Express Middleware */
-app.use(bodyparser.json());
-// CORS headers
-app.use((req,res,next) =>{
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-  next();
-});
 
 
 //keep this method --soo
@@ -140,7 +140,7 @@ app.get('/queue', (req, res) => {
 })
 
 //getting guestlist to render on event(room) page
-app.get('/guestlist' (req, res) => {
+app.get('/guestlist', (req, res) => {
   res.status(200).send(Testdata.guestlist)
 })
 
