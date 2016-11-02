@@ -1,33 +1,26 @@
-const Event = require('../model/eventmodel');
-
 const HistoryController = {};
-HistoryController.list = {};
+HistoryController.storage = {};
 
-HistoryController.addSong = (songURL, roomID) => {
-  io.on('newsong'), (lastSongURL, roomID) => {
-    if (HistoryController.list['roomID'] !== undefined) {
-      HistoryController.list['roomID'].push(lastSongURL);
+HistoryController.add = (roomID, songURL) => {
+    if (HistoryController.storage[roomID] !== undefined) {
+      HistoryController.storage[roomID].unshift(songURL);
     }
     else {
-      HistoryController.list['roomID'] = [];
-      HistoryController.list['roomID'].push(lastSongURL);
+      HistoryController.storage[roomID] = [];
+      HistoryController.storage[roomID].unshift(songURL);
     }
-  }
 };
 
-// HistoryController.endEvent = (list, roomID) => {
-//   add history to event in db
+HistoryController.remove = (roomID, songURL) => {
+    if (HistoryController.storage[roomID] === undefined) {
+      throw new Error ('roomID not found.');
+    }
+    else if (HistoryController.storage[roomID].includes(songURL)) {
+      let song = songURL;
+      HistoryController.storage[roomID].splice(HistoryController.storage[roomID].indexOf(songURL), 1);
+      return song;
+    }
+    throw new Error ('songURL not found.');
+};
 
-// }
-
-// function HistoryController(roomID) {
-//   this.roomID = roomID;
-//   this.stack = [];
-//   this.addSong = (songURL, io) => {
-//     io.on('newsong'), (lastSongURL) => {
-//     HistoryController.stack.push(lastSongURL);
-//   }
-// }
-// }
- 
 module.exports = HistoryController;
