@@ -16,6 +16,7 @@ const UserController = require('./controllers/UserController');
 const AuthenticationController = require('./controllers/AuthenticationController');
 const GuestController = require('./controllers/GuestController');
 const EventController = require('./controllers/EventController');
+const HistoryController = require('./controllers/HistoryController');
 const creds = require('../app.config');
 const session = require('express-session');
 const cookieParser = require('cookie-parser')
@@ -47,7 +48,7 @@ passport.use(new GoogleStrategy({
             google_id: profile.id,
             username: profile.name.givenName,
             favlist: []
-          })
+        })
           user.save();
         }
         if (user) {
@@ -140,14 +141,14 @@ app.get('/queue', (req, res) => {
 })
 
 //getting guestlist to render on event(room) page
-app.get('/guestlist' (req, res) => {
+app.get('/guestlist', (req, res) => {
   res.status(200).send(Testdata.guestlist)
 })
 
 //adding new data to queue, adds to the end of the list
 app.post('/queue', (req, res) => {
-  Testdata.queue.push(req.body);
-  io.emit('newdata');
+  // Testdata.queue.push(req.body);
+  io.emit('newdata', {songs: req.body, history: HistoryController.list, guests: GuestController.list});
   res.status(200).send("");
   res.end();
 })
