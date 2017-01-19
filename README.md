@@ -1,6 +1,7 @@
 # YocketList
 Where Yockets meets lists. YOCKET LIST!
-======
+
+This is a great boiler plate project for learning Real time web apps with React!
 
 # Contribution Guide
 ======
@@ -10,7 +11,7 @@ Webpack is our build tool of choice. NPM is set up to automate your build proces
 Run `npm start` to run the webpack dev server. Run `npn run serve` to spin up the node server powered by nodemon.
 Run `npm test` to run the test suite
 
-# Project Srtucture
+# Project Structure
 ======
 YocketList  
 .↳ Client  
